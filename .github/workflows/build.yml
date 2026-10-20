@@ -22,8 +22,8 @@ jobs:
         with:
           sdk: given
           target: iOS
-          # Supply the SDK binding PCH to generated sources; without it, FMOD wrappers fail before mod compilation.
-          configure-args: '-DCMAKE_CXX_FLAGS=-include\ Geode/Bindings.hpp'
+          # Generated FMOD wrappers need the SDK header even during CMake's early compiler probe.
+          configure-args: '-DCMAKE_CXX_FLAGS=-include\ ${{ github.workspace }}/geode-sdk-clone/loader/include/Geode/fmod/fmod.hpp'
           use-lto: false
           use-cpm-cache: false
 
