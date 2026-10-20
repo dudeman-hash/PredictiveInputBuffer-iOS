@@ -1,0 +1,8 @@
+buffer_core_test: PASS (212 checks)
+buffer_core_test: PASS
+wave_decision_tests: PASS
+Safe policy: 13 checks passed
+safe_policy_test: PASS
+Observation adapter: 5 scenarios passed (mock consumer, not GD proof)
+observation_adapter_test: PASS
+Source metadata: PASS (not an inspected .geode package)

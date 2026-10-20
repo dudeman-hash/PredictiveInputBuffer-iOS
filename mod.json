@@ -1,13 +1,11 @@
 {
   "geode": "5.11.2",
-  "gd": {
-    "ios": "2.2081"
-  },
+  "gd": {"ios": "2.2081"},
   "id": "cesar.input-buffer",
   "name": "Predictive Input Buffer",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "developer": "CesarGD96",
-  "description": "Buffer early gameplay inputs for a selectable number of ticks. Set the input buffer stage in this mod's settings.",
+  "description": "Source-only development revision: bounded cube/robot ground-input buffer. Exact wave prediction and complete Safe Mode protection remain unfinished. Test in Practice mode.",
   "settings": {
     "buffer-stage": {
       "type": "int",
@@ -16,10 +14,19 @@
       "default": 1,
       "min": 1,
       "max": 5,
-      "control": {
-        "slider": true,
-        "slider-step": 1
-      }
+      "control": {"slider": true, "slider-step": 1}
+    },
+    "enabled": {
+      "type": "bool", "name": "Enabled", "default": true,
+      "description": "Master switch. This source revision only implements the ground-input buffer; exact wave prediction is not connected."
+    },
+    "safe-mode": {
+      "type": "bool", "name": "Safe Mode", "default": true,
+      "description": "ON: attempts where the mod changed your inputs do not save progress. OFF: progress saves normally even when the mod helped."
+    },
+    "show-debug-overlay": {
+      "type": "bool", "name": "Show Debug Overlay", "default": true,
+      "description": "Show hook counters, queued/fired presses, assistance state, and unfinished protection/prediction status."
     }
   }
 }
