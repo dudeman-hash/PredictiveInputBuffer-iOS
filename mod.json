@@ -5,10 +5,16 @@
   },
   "id": "cesar.input-buffer",
   "name": "Predictive Input Buffer",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "developer": "CesarGD96",
-  "description": "Buffer early gameplay inputs for a selectable number of ticks. Set the input buffer stage in this mod's settings.",
+  "description": "Diagnostic revision for verifying iOS hooks. Input buffering, wave prediction, and Safe Mode enforcement are not active in this revision.",
   "settings": {
+    "enabled": {
+      "type": "bool",
+      "name": "Enabled",
+      "description": "Master switch for the input assistance features. The current diagnostic revision does not alter gameplay.",
+      "default": true
+    },
     "buffer-stage": {
       "type": "int",
       "name": "Input Buffer Stage",
@@ -20,6 +26,18 @@
         "slider": true,
         "slider-step": 1
       }
+    },
+    "safe-mode": {
+      "type": "bool",
+      "name": "Safe Mode",
+      "description": "ON: attempts where the mod changed your inputs do not save progress. OFF: progress saves normally even when the mod helped.",
+      "default": true
+    },
+    "show-debug-overlay": {
+      "type": "bool",
+      "name": "Show Debug Overlay",
+      "description": "Show live iOS hook diagnostics in PlayLayer.",
+      "default": true
     }
   }
 }
