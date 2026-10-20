@@ -87,6 +87,13 @@ namespace {
     void applyStage(std::int64_t value) {
         currentStage = std::clamp<std::int64_t>(value, 1, 5);
         if (currentStage == 5) {
+            replayingBufferedInput = true;
+            for (auto const& release : deferredReleases) {
+                if (release.player && !release.player->m_isDead) {
+                    release.player->releaseButton(release.button);
+                }
+            }
+            replayingBufferedInput = false;
             // Switching to raw input drops any still-pending presses.
             clearBuffers();
         }
