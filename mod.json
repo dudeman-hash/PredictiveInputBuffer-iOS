@@ -1,12 +1,25 @@
-
 {
   "geode": "5.11.2",
   "gd": {
-    "win": "2.2081"
+    "ios": "2.2081"
   },
   "id": "cesar.input-buffer",
   "name": "Predictive Input Buffer",
-  "version": "v0.1.0",
+  "version": "0.2.0",
   "developer": "CesarGD96",
-  "description": "F6 cycles through five input buffer stages."
+  "description": "Buffer early gameplay inputs for a selectable number of ticks. Set the input buffer stage in this mod's settings.",
+  "settings": {
+    "buffer-stage": {
+      "type": "int",
+      "name": "Input Buffer Stage",
+      "description": "1 = 2 ticks, 2 = 4 ticks, 3 = 8 ticks, 4 = 16 ticks (all) / 8 ticks (wave), 5 = Off (raw input).",
+      "default": 1,
+      "min": 1,
+      "max": 5,
+      "control": {
+        "slider": true,
+        "slider-step": 1
+      }
+    }
+  }
 }
