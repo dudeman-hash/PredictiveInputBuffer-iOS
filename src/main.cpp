@@ -9,6 +9,7 @@
 #include <Geode/modify/GameStatsManager.hpp>
 #include "buffer_core.hpp"
 #include "safe_policy.hpp"
+#include "trajectory_simulator.hpp"
 #include <algorithm>
 #include <array>
 #include <cinttypes>

@@ -3,7 +3,7 @@ set -euo pipefail
 root="$(cd "$(dirname "$0")/.." && pwd)"
 tmp="$(mktemp -d)"
 trap 'rm -rf "$tmp"' EXIT
-for test in buffer_core_test wave_decision_tests safe_policy_test observation_adapter_test; do
+for test in buffer_core_test wave_decision_tests safe_policy_test observation_adapter_test trajectory_simulator_test; do
   g++ -std=c++20 -Wall -Wextra -Werror -pedantic -fno-exceptions -fno-rtti \
     -I"$root/src" "$root/tests/$test.cpp" -o "$tmp/$test"
   "$tmp/$test"

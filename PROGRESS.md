@@ -68,3 +68,12 @@ The next meaningful gameplay check is a Practice-mode cube/robot tap just before
 
 [1]: https://geode-sdk.org/mods/thesillydoggo.qolmod "QOLMod listing and 2.2081 compatibility history"
 [2]: https://github.com/TheSillyDoggo/GeodeMenu/tree/2c21863548f38484bd7c968b95ffe71f5cd4ceaa/src "QOLMod source inspected for native trajectory side effects and Safe Mode guards"
+
+
+## Trajectory kernel work (2026-10-20)
+
+A new portable `src/trajectory_simulator.hpp` starts the prediction layer. The caller supplies a state, per-step physics profile, and frozen world-object array. The kernel advances deterministic substeps and covers basic movement, wave direction, one-shot orb activation, automatic pad impulses, gravity and speed portals, swept hazard checks, and conservative solid collision (a solid overlap is treated as unsafe rather than guessed collision resolution). No allocations or game callbacks occur in the kernel.
+
+`latestSurvivingClick` tests the current click timing first. If that candidate survives, it leaves the input alone. Otherwise, it evaluates later candidate timings through the selected delay window and returns the latest candidate whose full lookahead survives. `survivesClick` simulates the same tap-duration policy at each candidate timing. Unit tests include a synthetic overhead hazard where the immediate click dies and a later click passes, plus orb/pad/portal cases.
+
+This is the simulator kernel only. It is included in the Geode target but is not wired to gameplay, because the adapter still lacks verified iOS 2.2081 movement constants, native collision response, transformed per-object hitboxes, trigger ordering, and trustworthy snapshots of dynamic objects. Profiles in tests are synthetic and are not Geometry Dash values. Do not enable live prediction based on this kernel until those inputs are verified and the mod is tested in Practice mode on device.

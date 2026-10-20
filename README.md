@@ -1,10 +1,10 @@
-# Predictive Input Buffer — development source
+# Predictive Input Buffer — iOS development source
 
 Target: Geometry Dash iOS 2.2081, Geode 5.11.2, arm64. Source version: 0.3.0.
 
-This is not an installable mod file or a finished wave predictor. See `PROGRESS.md` for implemented features, limitations, tested behavior, and the precise incomplete Safe Mode coverage. No package was built or sent in this continuation.
+This is not yet an installable release or a gameplay-validated equivalent of the supplied Windows mod. The mod still implements only the conservative classic cube/robot released-tap buffer. A new allocation-free trajectory kernel now models configurable per-step movement, swept hazard checks, conservative solid collision, and orb, pad, gravity-portal, and speed-portal events. Its click planner tests the immediate click first and, only if it dies, selects the latest surviving delayed candidate within the configured window.
 
-The source adds a conservative classic cube/robot released-tap ground buffer and keeps genuine native input return values. The wave decision planner is standalone and is not connected to native movement/collision. New normal-mode assists are gated while Safe Mode is ON because complete save protection is not proven. Test in Practice mode; do not use this development revision for a record attempt.
+The kernel is compiled with the mod and covered by deterministic host tests. It is **not connected to live Geometry Dash state**. The current iOS adapter does not yet extract authoritative 2.2081 player physics, object hitboxes, trigger order, portal parameters, or collision response. The kernel’s physics values and world-space object snapshots must be calibrated against the exact iOS build before its results can safely drive real inputs. Do not treat passing unit tests or a successful compile as in-game proof. Keep testing in Practice mode.
 
 Run standalone tests with:
 
@@ -12,6 +12,4 @@ Run standalone tests with:
 bash tests/run_tests.sh
 ```
 
-These are C++ core/mock tests, not an iOS SDK compile or in-game proof.
-
-To apply this work, replace the corresponding files in your existing repository with this source bundle. Preserve any unrelated repository files and the existing SDK-selection mechanism. Do not download the source ZIP and import it as a `.geode` file. The included iOS workflow can be manually run on a source branch by you, as in the prior task; it also builds on pushes to `main`. This session did not publish a branch or run that workflow.
+These tests compile portable C++ prediction logic, not the game itself. Wave prediction, exact native simulation, complete Safe Mode protection, and gameplay integration remain unfinished. See [PROGRESS.md](PROGRESS.md) for implementation details and limitations.
