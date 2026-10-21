@@ -5,28 +5,34 @@
   "name": "Predictive Input Buffer",
   "version": "0.3.0",
   "developer": "CesarGD96",
-  "description": "Source-only development revision: bounded cube/robot ground-input buffer. Exact wave prediction and complete Safe Mode protection remain unfinished. Test in Practice mode.",
+  "description": "Experimental iOS classic-cube predictive tap delay for supported static geometry. Practice testing only; orb/pad and dynamic cases bypass prediction.",
   "settings": {
     "buffer-stage": {
       "type": "int",
       "name": "Input Buffer Stage",
-      "description": "1 = 2 ticks, 2 = 4 ticks, 3 = 8 ticks, 4 = 16 ticks (all) / 8 ticks (wave), 5 = Off (raw input).",
+      "description": "1 = 2, 2 = 4, 3 = 8, 4 = 16 native player-update calls; 5 = Off. Safe Mode ON restricts interventions to Practice/editor; unsupported cases pass through.",
       "default": 1,
       "min": 1,
       "max": 5,
       "control": {"slider": true, "slider-step": 1}
     },
     "enabled": {
-      "type": "bool", "name": "Enabled", "default": true,
-      "description": "Master switch. This source revision only implements the ground-input buffer; exact wave prediction is not connected."
+      "type": "bool",
+      "name": "Enabled",
+      "default": true,
+      "description": "Enables experimental classic-cube prediction for supported static geometry. Other modes and orb/pad, slope, grouped, rotated, or dynamic interactions are passed through."
     },
     "safe-mode": {
-      "type": "bool", "name": "Safe Mode", "default": true,
-      "description": "ON: attempts where the mod changed your inputs do not save progress. OFF: progress saves normally even when the mod helped."
+      "type": "bool",
+      "name": "Safe Mode",
+      "default": true,
+      "description": "ON: new input interventions are restricted to Practice/editor. This is not complete save protection. OFF allows prediction interventions during normal play; do not use for progress attempts."
     },
     "show-debug-overlay": {
-      "type": "bool", "name": "Show Debug Overlay", "default": true,
-      "description": "Show hook counters, queued/fired presses, assistance state, and unfinished protection/prediction status."
+      "type": "bool",
+      "name": "Show Debug Overlay",
+      "default": true,
+      "description": "Show per-player prediction status, unsupported reason, snapshot objects, candidates, selected delay, and actual input overrides."
     }
   }
 }

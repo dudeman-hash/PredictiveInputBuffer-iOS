@@ -17,6 +17,9 @@ assert m['gd']['ios'] == '2.2081' and m['geode'] == '5.11.2'
 assert m['version'] == '0.3.0'
 assert m['settings']['safe-mode']['default'] is True
 assert set(m['settings']) == {'buffer-stage', 'enabled', 'safe-mode', 'show-debug-overlay'}
+assert 'classic-cube' in m['description']
+assert 'orb/pad' in m['settings']['enabled']['description']
+assert 'not complete save protection' in m['settings']['safe-mode']['description']
 assert 'VERSION 0.3.0' in (root / 'CMakeLists.txt').read_text()
 print('Source metadata: PASS (not an inspected .geode package)')
 PY
