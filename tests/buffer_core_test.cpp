@@ -154,6 +154,22 @@ void testEarlyTapReplaysWithoutStuckHold() {
     checkNoAction(buffer.onPhysicalRelease());
 }
 
+void testModelScheduledTapWaitsForTargetStep() {
+    pib::EarlyPressBuffer buffer;
+    CHECK(buffer.setWindowTicks(4).accepted);
+    checkNoAction(buffer.onPhysicalPress(500, false));
+    CHECK(buffer.schedulePending(503));
+
+    checkNoAction(buffer.onPhysicsStep(501, true));
+    checkNoAction(buffer.onPhysicsStep(502, true));
+    CHECK(buffer.hasPendingPress());
+
+    const auto fire = buffer.onPhysicsStep(503, true);
+    CHECK(fire.push && fire.bufferedFire && !fire.expired);
+    CHECK(!fire.release); // finger is still down
+    CHECK(!buffer.hasPendingPress());
+}
+
 void testBypassReconcilesHeldStateAndDropsPending() {
     pib::EarlyPressBuffer buffer;
     CHECK(buffer.setWindowTicks(8).accepted);
@@ -231,6 +247,7 @@ int main() {
     testInclusiveBoundAndOneShotFire();
     testExpiryForEverySupportedWindow();
     testEarlyTapReplaysWithoutStuckHold();
+    testModelScheduledTapWaitsForTargetStep();
     testBypassReconcilesHeldStateAndDropsPending();
     testLifecycleCleanupActual();
     testRejectedConfigurationDoesNotChangeState();

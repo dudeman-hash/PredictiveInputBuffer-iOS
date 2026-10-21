@@ -2,14 +2,16 @@
 
 Target: Geometry Dash iOS 2.2081, Geode 5.11.2, arm64. Source version: 0.3.0.
 
-This is not yet an installable release or a gameplay-validated equivalent of the supplied Windows mod. The mod still implements only the conservative classic cube/robot released-tap buffer. A new allocation-free trajectory kernel now models configurable per-step movement, swept hazard checks, conservative solid collision, and orb, pad, gravity-portal, and speed-portal events. Its click planner tests the immediate click first and, only if it dies, selects the latest surviving delayed candidate within the configured window.
+This is an unfinished development build, not an installable release or a gameplay-validated equivalent of the supplied Windows mod. A conservative live adapter now reads the current player physics and nearby static level objects for **classic cube taps**. It simulates the immediate click and later timings; if the immediate trajectory intersects a modeled hazard but a later candidate survives, it suppresses that click and injects it on the selected update tick. New interventions remain Practice/editor-only while Safe Mode is ON.
 
-The kernel is compiled with the mod and covered by deterministic host tests. It is **not connected to live Geometry Dash state**. The current iOS adapter does not yet extract authoritative 2.2081 player physics, object hitboxes, trigger order, portal parameters, or collision response. The kernel’s physics values and world-space object snapshots must be calibrated against the exact iOS build before its results can safely drive real inputs. Do not treat passing unit tests or a successful compile as in-game proof. Keep testing in Practice mode.
+The live model is deliberately narrow. It uses native `PlayerObject` position/velocity, current `dt`, gravity and jump-start values, basic axis-aligned static solids/hazards, and gravity portals. It fails closed (passes the input through without prediction) around orb/pad interactions, mode/size/speed/teleport portals, slopes, rotated or grouped/dynamic geometry, unsupported player states, and non-cube modes. The collision model is not a clone of Geometry Dash's native collision system: hazard rectangles can be conservative, the solid response covers only simple axis-aligned contacts, and the fallback floor is inferred only from a grounded live player. Wave prediction, comprehensive orb/pad behavior, and other movement modes are not implemented.
 
-Run standalone tests with:
+**Do not use this experimental intervention for a progress attempt.** Safe Mode's save protection is incomplete. The prediction is not yet calibrated on-device, and even its supported subset may be wrong on real gameplay. Test only in Practice mode, with the debug overlay visible, and report the prediction status, candidate count, nearby object count, and whether an override fired.
+
+Run the portable tests with:
 
 ```sh
 bash tests/run_tests.sh
 ```
 
-These tests compile portable C++ prediction logic, not the game itself. Wave prediction, exact native simulation, complete Safe Mode protection, and gameplay integration remain unfinished. See [PROGRESS.md](PROGRESS.md) for implementation details and limitations.
+These tests cover deterministic model and input scheduling logic; they do not compile or validate the game. A successful CI build is not in-game proof. See [PROGRESS.md](PROGRESS.md) for the current implementation, test status, and remaining work.

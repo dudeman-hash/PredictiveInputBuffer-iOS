@@ -44,12 +44,15 @@ int main() {
     State clickStart{};
     clickStart.halfWidth = 0.1;
     clickStart.halfHeight = 0.1;
+    clickStart.grounded = true;
     PhysicsProfile clickPhysics = profile;
     clickPhysics.jumpImpulse = 3.0;
     Object ceiling{ObjectKind::Hazard, {0.5, 2.0, 1.5, 4.0}, 0, true};
+    Object floor{ObjectKind::Solid, {-10.0, -1.0, 10.0, -0.1}, 0, true};
+    Object clickObjects[] = {ceiling, floor};
     auto clickChoice = latestSurvivingClick(2, 5,
         [&](std::uint8_t delay, std::uint8_t horizon) {
-            return survivesClick(clickStart, clickPhysics, &ceiling, 1,
+            return survivesClick(clickStart, clickPhysics, clickObjects, 2,
                                  delay, horizon, 1);
         });
     assert(clickChoice.delay && clickChoice.delayTicks == 2);
@@ -72,6 +75,20 @@ int main() {
     auto accelerated = advance(start, {}, profile, &speed, 1);
     assert(accelerated.portalActivated && near(accelerated.state.speed, 2.0));
 
+    State grounded{};
+    grounded.grounded = true;
+    PhysicsProfile nativeStep = profile;
+    nativeStep.gravityAcceleration = 1.0;
+    nativeStep.jumpImpulse = 2.0;
+    nativeStep.timeStep = 0.25;
+    nativeStep.substeps = 1;
+    auto takeoff = advance(grounded, {true, true}, nativeStep, nullptr, 0);
+    assert(!takeoff.state.grounded && near(takeoff.state.velocity.y, 2.0));
+    assert(near(takeoff.state.position.y, 0.5)); // no extra gravity on the jump step
+    auto fallingStep = advance(takeoff.state, {}, nativeStep, nullptr, 0);
+    assert(near(fallingStep.state.velocity.y, 1.75));
+    assert(near(fallingStep.state.position.y, 0.9375));
+
     State wave = start;
     wave.mode = Mode::Wave;
     wave.gravity = 1.0;
@@ -80,5 +97,11 @@ int main() {
     assert(rising.state.position.y > start.position.y);
     assert(falling.state.position.y < start.position.y);
 
-    std::cout << "Trajectory kernel: 10 checks passed\n";
+    Object normalGravity{ObjectKind::GravityPortal, {0.5, -1.0, 1.5, 1.0}, -1.0, true};
+    State invertedGravity = start;
+    invertedGravity.gravity = 1.0;
+    auto restored = advance(invertedGravity, {}, profile, &normalGravity, 1);
+    assert(restored.portalActivated && near(restored.state.gravity, -1.0));
+
+    std::cout << "Trajectory kernel: checks passed\n";
 }

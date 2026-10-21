@@ -139,7 +139,18 @@ public:
         // physical edge can create at most one replayable press.
         m_pending = true;
         m_pendingSince = step;
+        m_notBefore = step;
         return {};
+    }
+
+    // Move a pending press to a model-selected future physics step. The target
+    // must remain inside the existing inclusive buffer window; invalid targets
+    // are rejected without changing the pending press.
+    [[nodiscard]] constexpr bool schedulePending(PhysicsStep notBefore) noexcept {
+        if (!m_pending || notBefore < m_pendingSince ||
+            notBefore - m_pendingSince > m_windowTicks) return false;
+        m_notBefore = notBefore;
+        return true;
     }
 
     // Call on the physical up edge, including when a press is still pending.
@@ -166,6 +177,7 @@ public:
             return NativeActions{false, false, false, true};
         }
 
+        if (step < m_notBefore) return {};
         if (!validNow) {
             return {};
         }
@@ -248,6 +260,7 @@ private:
     }
 
     PhysicsStep m_pendingSince = 0;
+    PhysicsStep m_notBefore = 0;
     BufferTicks m_windowTicks = kStage1Ticks;
     bool m_pending = false;
     bool m_physicalHeld = false;
